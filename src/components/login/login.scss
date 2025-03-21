@@ -1,0 +1,122 @@
+/* LoginModal.module.scss */
+@import url('https://fonts.googleapis.com/css2?family=Neonderthaw&display=swap');  
+@import url('https://fonts.googleapis.com/css2?family=Londrina+Solid&display=swap');  
+
+@font-face {  
+  font-family: 'Vazir FD-WOL';  
+  src: url('../fonts/VazirFD-WOL.woff2') format('woff2'),  
+       url('../fonts/VazirFD-WOL.woff') format('woff'),  
+       url('../fonts/VazirFD-WOL.ttf') format('truetype');  
+  font-weight: normal;  // Adjust if the font has different weights  
+  font-style: normal;   // Adjust if the font has styles like italic  
+}
+.dialogTitle {  
+  display: flex;  
+  align-items: center;    
+  flex-direction: column;
+  // padding-top: 20px;    
+  // border-radius: 40px;
+}  
+
+.logoContainer {  
+  display: flex;  
+  justify-content: center; 
+  align-items: center;    
+  margin: 0 auto;    
+  
+  img {  
+    height: 60px;  
+    width: 115px;  
+  }  
+}  
+
+.closeButton {  
+  color: #000;   
+  transition: color 0.3s ease;  
+  margin: 0 auto ;
+  text-align:left ;
+
+  .closeIcon {  
+    font-size: 1.5rem;   
+  }  
+}  
+.titleContainer {  
+
+  text-align: center;  
+  margin: 5px auto ;  
+  margin-top: 30px;
+}  
+
+.titleContainer h1 {  
+  font-size: 30px;   
+  margin: 0;   
+  display: inline-block;   
+  position: relative;   
+    font-family: 'IRANSansMobile';  
+  font-weight: bold;  
+}  
+
+  
+.titleContainer .non-bold {  
+  font-weight: normal;   
+}  
+
+
+
+.dialogActions {  
+  display: flex;                 
+  justify-content: center;    
+  width: 100%;                   
+
+  .buttonWrapper {  
+    display: flex;               
+    justify-content: center;  
+    align-items: center;    
+    margin-top: 10px;  
+    margin-bottom: 40px;  
+    width: 100%;   
+    font-family: 'Vazir FD-WOL';  
+  }  
+
+  .dialogActionsButton {  
+    background-color: #F18825;   
+    color: white;                 
+    padding: 0.5rem 0; 
+    width: 79.5%;
+    height: 40px;  
+    border-radius: 15px;    
+    transition: background-color 0.3s ease;  
+    font-family: 'IRANSansMobile';  
+    font-size: 21px;   
+
+   margin-right: 27px;
+
+    &.disabled { 
+      background-color:rgba(237, 239, 240);  
+      color: rgba(168, 171, 178); 
+      cursor: not-allowed;  
+
+      &:hover { 
+        background-color: rgba(237, 239, 240);   
+      }  
+    }  
+  }  
+}  
+
+.nanziText {
+  display: flex;
+  font-family: 'Neonderthaw', cursive; 
+  font-size: 25px; 
+  color: #B8681D; 
+  font-weight: 400px;
+  line-height: 100%;
+  margin: 5px auto ;
+
+}
+
+.fullScreenContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+}
