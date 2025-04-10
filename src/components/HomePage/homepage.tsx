@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import LoginModal from "../login/login";
-import Signup from "../login/signup";
+import React, { useState, useEffect } from "react";
+import LoginModal from "../login/login"; // Ensure the path is correct 
+import { useTheme } from '../theme'; // Import your theme context if needed  
 
-const HomePage: React.FC = () => {
+
+export default function HomePage() {
+  const { isDarkMode, toggleDarkMode } = useTheme(); // Get both isDarkMode and toggleDarkMode from context  
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -14,7 +16,14 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div style={{ position: "relative", padding: "20px" }}>
+    <div
+      style={{
+        position: "relative",
+        padding: "20px",
+        backgroundColor: isDarkMode ? '#121212' : '#ffffff', // Background changes with theme  
+        color: isDarkMode ? '#ffffff' : '#000000' // Text color changes with theme  
+      }}
+    >
       <button
         style={{
           position: "absolute",
@@ -31,9 +40,22 @@ const HomePage: React.FC = () => {
       >
         ورود/عضویت
       </button>
-      {isModalOpen && <Signup onClose={handleCloseModal} open={isModalOpen} />}
+      <button
+        style={{
+          marginTop: '0px',
+          padding: '10px 10px',
+          marginLeft: '150px',
+          cursor: 'pointer',
+          background: isDarkMode ? '#F18825' : '#F18825', // Change background based on theme  
+          color: '#fff',
+          border: 'none',
+          borderRadius: '5px',
+        }}
+        onClick={toggleDarkMode}
+      >
+        {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+      </button>
+      {isModalOpen && <LoginModal onClose={handleCloseModal} open={isModalOpen} />}
     </div>
   );
-};
-
-export default HomePage;
+}; 

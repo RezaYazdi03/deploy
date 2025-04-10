@@ -1,72 +1,81 @@
 import React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, IconButton, InputAdornment } from '@mui/material';
+import { useState, useEffect } from 'react';
+
+import { Dialog, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import createCache from '@emotion/cache';
-import { CacheProvider } from '@emotion/react';
-import { useState } from 'react';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import { prefixer } from 'stylis';
-import rtlPlugin from 'stylis-plugin-rtl';
-import PhoneIcon from '@mui/icons-material/Phone';
-import PhoneOutlined from '@mui/icons-material/PhoneOutlined';
-import Logo from "../../assets/logo.png";
+import Logo from "./assets/logo.png";
+import Logodark from "./assets/logo-dark.png";
 import './login.scss';
+import { useTheme } from '../theme';
+import FirstPage from './firstpage';
+import SecondPage from './secondpage';
+import ThirdPage from './thirdpage';
 
-interface LoginModalProps {
-  open: boolean;
-  onClose: () => void;
+enum Step {
+  PHONE = 'PHONE',
+  CODE = 'CODE',
+  REGISTER = 'REGISTER',
 }
-const theme = createTheme({
-  direction: 'rtl',
-});
-function Rtl(props) {
-  return <CacheProvider value={rtlCache}>{props.children}</CacheProvider>;
-}
-const rtlCache = createCache({
-  key: 'muirtl',
-  stylisPlugins: [prefixer, rtlPlugin],
-});
-const cacheRtl = createCache({
-  key: 'muirtl',
-  stylisPlugins: [prefixer, rtlPlugin],
-});
+export default function LoginModal({ open, onClose }) {
 
-
-const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
+  const { isDarkMode, toggleDarkMode } = useTheme(); // Get both isDarkMode and toggleDarkMode from context  
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [step, setStep] = useState<Step>(Step.REGISTER);
+  const [timeLeft, setTimeLeft] = useState(120);
+  const [isFinished, setIsFinished] = useState(false);
+  const [verificationCode, setVerificationCode] = useState<string[]>(Array(4).fill(null));
+  const [codeError, setCodeError] = useState<string | null>(null);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-  };
-  const handleInputChange = (event) => {
-    const value = event.target.value;
-    setPhoneNumber(value);
+  useEffect(() => {
+    if (step === Step.PHONE) {
+      setVerificationCode(Array(4).fill(''));
+      setCodeError('');
+    } else if (step === Step.CODE) {
+      setTimeLeft(120);
+      setIsFinished(false);
+      setCodeError('');
+    }
+  }, [step]);
 
-    if (value.length < 2) {
-      setError(null);
-    } else if (!value.startsWith("09") && value.length >= 2 || value.length > 11 || value.length === 11 && !/^09\d{9}$/.test(value)) {
-      setError('شماره همراه معتبر نیست');
-    } else {
-      setError(null);
+ 
+
+  const renderContent = () => {
+    switch (step) {
+      case Step.PHONE:
+        return (<FirstPage isDarkMode={isDarkMode} setStep={setStep} phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />);
+      case Step.CODE:
+        return (<SecondPage 
+          isDarkMode={isDarkMode}
+          phoneNumber={phoneNumber}
+          setStep={setStep}
+          timeLeft={timeLeft}
+          setTimeLeft={setTimeLeft}
+          onClose={onClose} 
+          isFinished={isFinished}
+          setIsFinished={setIsFinished}
+          />);
+      case Step.REGISTER:
+        return (
+          <ThirdPage 
+          open={open} 
+          onClose={onClose} 
+          isDarkMode={isDarkMode} 
+          timeLeft={timeLeft} 
+          setTimeLeft={setTimeLeft} 
+          setStep={setStep} 
+          phoneNumber={phoneNumber}
+          isFinished={isFinished}
+          setIsFinished={setIsFinished}
+          />
+        );
+      default:
+        return null;
     }
   };
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    if (phoneNumber === '') {
-      setIsFocused(false);
-    }
-  };
-
-  const isButtonDisabled = phoneNumber.length !== 11; // Check if phone number has 11 digits  
-
   return (
-    <Dialog
+    <Dialog className={isDarkMode ? 'dark-login' : 'light-login'}
       open={open}
       onClose={onClose}
       maxWidth="xs"
@@ -75,146 +84,47 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
         '& .MuiDialog-paper': {
           borderRadius: '26px',
           overflow: 'hidden',
+          backgroundColor: isDarkMode ? '#191919' : '#fff',
+          color: isDarkMode ? '#fff' : '#000',
           justifyContent: 'center',
-
         },
         '& .MuiDialogContent-root': {
           paddingBottom: 0,
           overflowY: 'hidden',
         },
+
         '& .MuiDialogActions-root': {
           padding: '16px',
         },
+
       }}
     >
-
-      <DialogTitle>
-        <IconButton edge="end" color="inherit" onClick={onClose} className='closeButton'>
-          <CloseIcon className='closeIcon' />
-        </IconButton>
+      <DialogTitle className={isDarkMode ? 'dark-login' : 'light-login'}>
+        {step === Step.PHONE ? (
+          <IconButton edge="end" color="inherit" onClick={onClose} className="closeButton">
+            <CloseIcon className="closeIcon" />
+          </IconButton>
+        ) : (
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={() => setStep(Step.PHONE)}
+            className="backButton"
+          >
+            <ChevronLeftIcon className="backIcon" />
+          </IconButton>
+        )}
         <div className='dialogTitle'>
-
           <div className='logoContainer'>
-            <img src={Logo} alt="Nanzi Logo" />
+            <img src={isDarkMode ? Logodark : Logo} alt="Nanzi Logo" />
           </div>
           <div className='fullScreenContainer'>
             <h1 className='nanziText'>Nanzi</h1>
           </div>
-          <div className="titleContainer">
-            <h1>    ورود <span className="non-bold">یا</span> عضویت
-            </h1>
-          </div>
+
         </div>
-
-
       </DialogTitle>
-      <CacheProvider value={cacheRtl}>
-        <ThemeProvider theme={theme}>
-          <div dir="rtl" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <form id="login-form" onSubmit={handleSubmit} style={{ width: '350px', margin: '0 auto' }}>
-              <TextField
-                autoFocus
-                margin="dense"
-                label={
-                  <span>
-                    شماره تلفن همراه
-                    {(isFocused || phoneNumber.length > 0) && (
-                      <span style={{ color: 'red' }}> *</span>
-                    )}
-                  </span>
-                }
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={phoneNumber}
-                onChange={handleInputChange}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                error={!!error}
-                helperText={error}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PhoneOutlined style={{ color: 'black' }} />
-                    </InputAdornment>
-                  ),
-                  style: {
-                    color: 'black',
-                    textAlign: 'right',
-                    direction: 'ltr',
-                  },
-                }}
-                InputLabelProps={{
-                  shrink: isFocused || phoneNumber.length > 0,
-                  style: {
-                    color: error ? 'red' : (isFocused || phoneNumber.length > 0 ? '#4C4343' : 'gray'), // Change label color based on error  
-                  },
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '15px',
-                    fontFamily: 'IRANSansMobile',
-                    fontSize: '18px',
-                    height: '50px',
-                    '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: error ? 'red' : '#4C4343',
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: error ? 'red' : '#4C4343',
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: error ? 'red' : '#4C4343',
-                    },
-                    '&.Mui-focused': {
-                      color: '#4C4343',
-                    },
-                  },
-                  '& .MuiInputBase-root': {
-                    '&.Mui-focused': {
-                      color: '#4C4343',
-                    },
-                    '&:focus': {
-                      boxShadow: 'none',
-                    },
-                  },
-                  '& .MuiInputBase-input:focus': {
-                    color: '#4C4343',
-                  },
-                  '& .MuiInputLabel-outlined': {
-                    fontFamily: 'IRANSansMobile',
-                    fontSize: '18px',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: phoneNumber ? '#4C4343' : 'gray',
-                  },
-                  '& .MuiFormLabel-asterisk': {
-                    color: 'red',
-                  },
-                  '& .MuiFormLabel': {
-                    color: '#4C4343',
-                  },
-                }}
-                dir="rtl"
-              />
-            </form>
-          </div>
-        </ThemeProvider>
-      </CacheProvider>
-
-      <DialogActions className="dialogActions">
-        <div className="buttonWrapper">
-          <Button
-            type="submit"
-            form="login-form"
-            className={`dialogActionsButton ${isButtonDisabled ? 'disabled' : ''}`}
-            disabled={isButtonDisabled}
-          >
-            ادامه
-          </Button>
-        </div>
-      </DialogActions>
+      {renderContent()}
     </Dialog>
   );
 };
-
-export default LoginModal;

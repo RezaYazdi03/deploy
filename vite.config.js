@@ -7,5 +7,4 @@ import tailwind from 'vite-plugin-tailwind';
 export default defineConfig({
   plugins: [react()
   ],
-  base: process.env.VITE_BASE_PATH || "/deploy",
 })
