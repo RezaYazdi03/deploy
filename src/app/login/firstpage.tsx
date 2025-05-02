@@ -106,7 +106,7 @@ export default function FirstPage({isDarkMode, setStep , phoneNumber, setPhoneNu
                         type="submit"
                         form="login-form"
                         className={`${styles.dialogActionsButton} ${isPhoneButtonDisabled ? styles.disabled : ''}`}
-                        disabled={isPhoneButtonDisabled}
+                        disabled={!!isPhoneButtonDisabled}
                         onClick={handlePhoneSubmit}
                     >
                         ادامه
