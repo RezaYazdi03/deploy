@@ -1,24 +1,21 @@
+'use client'
 import React, { useState } from "react";  
-import FinalOrders from "./OrderCards";
-import CurrentOrders from './CurrentOrder';
-interface Ordersnum {  
-  currentOrdersCount: string;    
-  finalOrdersCount: string;  
-  selectedTab: number;
-  setSelectedTab: (tab: number) => void;
-}  
+import Reserve from "./Reservation";
+import TimeChoosing from "./TimeChoosing";
 
-const Menu: React.FC<Ordersnum> = ({ currentOrdersCount, finalOrdersCount, selectedTab, setSelectedTab  }) => {  
 
-  // const [selectedTab, setSelectedTab] = useState(0); 
+const Tab: React.FC= () => {  
+
+  const [selectedTab, setSelectedTab] = useState(1); 
   
   
 
   return (  
-    <div className="container mx-auto mt-10">  
+    <>
+    <div className="container mx-auto mt-5 relative w-full">  
       <div className="flex bg-gray-300 rounded-2xl 
-                      overflow-hidden w-full
-                      md:w-full mx-auto lg:w-[60%]">    
+                      overflow-hidden w-full mx-5
+                      md:w-full md:mx-auto lg:w-[25%]  absolute end-0">    
         <div   
           className={`flex-1 text-center py-2 cursor-pointer 
                       relative border border-gray-300 
@@ -30,7 +27,7 @@ const Menu: React.FC<Ordersnum> = ({ currentOrdersCount, finalOrdersCount, selec
         >  
           <span className="font-vazir text-black font-bold text-xs 
                            sm:text-sm
-                           md:text-base">سفارش های نهایی&zwnj;({(finalOrdersCount)})</span>  
+                           md:text-md">رزرو ماهانه</span>  
           <div className={`absolute bottom-0 left-0 right-0 
                            h-1 bg-[#F18825] rounded-2xl 
             ${selectedTab === 0 ? '' : 'hidden'}`}>
@@ -48,16 +45,20 @@ const Menu: React.FC<Ordersnum> = ({ currentOrdersCount, finalOrdersCount, selec
         >  
           <span className="font-vazir text-black font-bold text-xs 
                            sm:text-sm 
-                           md:text-base">سفارش های جاری&zwnj;({(currentOrdersCount)})</span>  
+                           md:text-md">تحویل فوری</span>  
           <div className={`absolute bottom-0 left-0 right-0 
                            h-1 bg-[#F18825] rounded-2xl 
             ${selectedTab === 1 ? '' : 'hidden'}`}>
           </div>  
         </div>  
-      </div>  
-     
+      </div> 
     </div>  
+    <div className="box-contetnt bg-white w-full min-h-40 rounded-2xl mt-10">
+      {selectedTab === 0 && <Reserve />}
+      {selectedTab === 1 && <TimeChoosing />}
+    </div> 
+    </>
   );  
 };  
 
-export default Menu;  
+export default Tab;  
