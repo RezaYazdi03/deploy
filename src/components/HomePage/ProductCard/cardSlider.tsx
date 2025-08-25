@@ -6,11 +6,31 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ProductCard from '../ProductCard/productCard';
 import axios from 'axios';
+import { useCart } from "../../../context/Receiptcontext";
+import ProductPage from '../../ProductPage/ProductPage';
 
 
 export default function CardSlider({ text, color, url, type }) {
+    const { fetchDatauser } = useCart();
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    const handleOpenModal = (id) => {
+        console.log("id",id)
+        setSelectedItem(id); 
+        setIsOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsOpen(false);
+        setSelectedItem(null);
+    };
+
+
     const [products, setProducts] = useState<any[]>([]);
     useEffect(() => {
+        fetchDatauser();
         axios.get(url)
             .then(
                 (response) => {
@@ -19,14 +39,17 @@ export default function CardSlider({ text, color, url, type }) {
                         name: item.name,
                         image: item.photo_url,
                         discount: item.discount,
-                        price: item.discounted_price,
-                        rate: item.average_rate
+                        price:item.price,
+                        discountedprice: item.discounted_price,
+                        rate: item.average_rate,
+                        stock:item.stock
                     }));
                     setProducts(data);
                     console.log(response)
                 }
             )
     }, []);
+    
 
     const settings = {
         dots: true,
@@ -64,6 +87,7 @@ export default function CardSlider({ text, color, url, type }) {
     };
 
     return (
+        <>
         <div className='rounded-2xl md:px-8 py-1 pb-8 m-6 px-8 md:m-10 drop-shadow-xl/25' style={{ backgroundColor: color }}>
             <div className='text-white dark:text-black
             text-xl
@@ -72,6 +96,7 @@ export default function CardSlider({ text, color, url, type }) {
                 {text}
             </div>
             <Slider {...settings}>
+                
                 {products.slice(0, 5).map((product) => (
                     <ProductCard
                         key={product.id}
@@ -79,11 +104,22 @@ export default function CardSlider({ text, color, url, type }) {
                         text={product.name}
                         ref={product.id}
                         percent={product.discount}
+                        discountedprice={product.discounted_price||Math.round(product.price * (1 - product.discount / 100))}
                         price={product.price}
                         rate={product.rate}
-                        type={type} />
+                        stock={product.stock}
+                        type={type}
+                        onOpenModal={handleOpenModal}
+                     />
                 ))}
             </Slider>
         </div>
+        {isOpen && (
+        <ProductPage
+            open={isOpen}
+            itemid={selectedItem}
+            onClose={handleCloseModal}
+        />
+        )}</>
     );
 };

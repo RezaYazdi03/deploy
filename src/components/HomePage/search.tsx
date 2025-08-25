@@ -49,6 +49,7 @@ const Search: React.FC = () => {
   });
 
   const handleOpenModal = (itemId: number) => {
+    console.log("item",itemId)
     setSelectedItem(itemId);
     setIsOpen(true);
   };
@@ -83,6 +84,7 @@ const Search: React.FC = () => {
   };
 
   return (
+    <>
     <div dir="rtl" className="relative w-full max-w-md mx-auto">
       <div 
         className={`
@@ -91,6 +93,7 @@ const Search: React.FC = () => {
           rounded-3xl p-2 
           dark:bg-[#383535] bg-[#D9D9D9]
           w-full
+          mt-2
         `} 
         dir='rtl'
       >
@@ -98,7 +101,7 @@ const Search: React.FC = () => {
         <input
           type="text"
           className={`
-            px-2 py-1 
+            px-2 py-1
             focus:outline-none font-vazir
             w-full rounded-full text-right dark:text-white
             bg-transparent text-[16px] dark:placeholder:[#D9D9D9] placeholder:[#696363]
@@ -130,7 +133,7 @@ const Search: React.FC = () => {
                     <div
                       key={item.id}
                       className="flex flex-col gap-2 p-2 rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => handleOpenModal(item.id)}
+                      onMouseDown={() => handleOpenModal(item.id)}
                     >
                       <div className={`flex items-center dark:text-gray-300 text-gray-700 `}>
                         <span className={`mr-2 font-bold dark:text-gray-300 text-gray-700 font-vazir`}>نام محصول:</span>
@@ -166,9 +169,14 @@ const Search: React.FC = () => {
         </div>
       )}
       <div dir='ltr'>
-        {isOpen && <ProductPage onClose={handleCloseModal} open={isOpen} itemid={selectedItem} />}
+         {isOpen && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
+              <ProductPage onClose={handleCloseModal} open={isOpen} itemid={selectedItem} />
+            </div>
+          )}
       </div>
     </div>
+    </>
   );
 };
 

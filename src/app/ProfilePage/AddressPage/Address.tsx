@@ -10,7 +10,7 @@ import Map from "../../locationWindow/MapPopUp";
 import { IoLocationOutline } from "react-icons/io5";
 
 
-const Address: React.FC = () => {  
+const Support: React.FC = () => {  
 
     const { data } = useADDRESS();
     const [showPopup, setShowPopup] = useState(false);
@@ -22,8 +22,8 @@ const Address: React.FC = () => {
     const CloseMap = () => SetIsMapOpen(false);
 
     return (
-        <div className="container bg-white dark:bg-neutral-800 rounded-xl mt-4 mx-4 ml-4 p-10 w-auto mb-4 ">
-            <div className='flex flex-row-reverse mb-7 gap-1 '>
+        <div className="container bg-white dark:bg-[#191919] rounded-xl mt-4 mx-4 ml-4 p-10 w-auto mb-4 min-h-screen">
+            <div className='flex flex-row-reverse mb-7 gap-1  '>
               <IoLocationOutline className='h-6 w-6 text-[#F18825]'/>
               <span className='font-semibold text-2xl dark:text-white'>آدرس‌های من</span>
             </div>
@@ -44,7 +44,7 @@ const Address: React.FC = () => {
 
             <div className="flex flex-row-reverse mt-5">
                 <button
-                    className="bg-[#F18825] rounded-2xl w-auto p-2 pl-4 pr-3 flex items-center gap-2 text-white font-medium cursor-pointer 
+                    className="bg-[#F18825] rounded-2xl w-auto p-2 pl-4 pr-3 flex items-center gap-2 text-white dark:text-black font-medium cursor-pointer 
                         hover:bg-orange-400 transition duration-300 hover:scale-105"
                     onClick={OpenMap}
                 >
@@ -57,4 +57,4 @@ const Address: React.FC = () => {
     );
 };  
 
-export default Address;  
+export default Support;  
