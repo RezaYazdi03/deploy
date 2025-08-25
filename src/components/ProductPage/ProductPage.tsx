@@ -237,9 +237,9 @@ export default function ProductPage({ open, onClose, itemid }) {
                                         dark:text-[#BAB2B2] text-gray-700`}>
                                                     {data.description}
                                                 </div>
-                                                <div className={` box-content rounded-2xl bg-${data.color}-400 border-1 p-2 mt-3 ml-4 font-vazir sm:ml-10
+                                                {/* <div className={` box-content rounded-2xl bg-${data.color}-400 border-1 p-2 mt-3 ml-4 font-vazir sm:ml-10
                                          text-xs sm:text-base lg:text-lg lg:mt-7 dark:text-white dark:border-white dark:font-medium 
-                                         text-black font-semibold text-right `}>{data.box_color}</div>
+                                         text-black font-semibold text-right `}>{data.box_color}</div> */}
                                                 <div className="flex flex-row-reverse mt-2 justify-between lg:mt-9">
                                                     <div className='flex flex-col'>
                                                         <div className={`font-vazir text-right text-base sm:text-xl 
